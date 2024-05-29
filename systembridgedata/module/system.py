@@ -14,7 +14,7 @@ import aiohttp
 from packaging.version import parse
 from plyer import uniqueid
 from psutil import boot_time, users
-from psutil._common import suser
+from systembridgemodels.modules.system import SystemUser
 
 from systembridgeshared.base import Base
 from systembridgeshared.common import get_user_data_directory
@@ -237,9 +237,20 @@ class System(Base):
         """Get uptime."""
         return os.times().system
 
-    def get_users(self) -> list[suser]:  # pylint: disable=unsubscriptable-object
+    def get_users(self) -> list[SystemUser]:
         """Get users."""
-        return users()
+        active_user_name = self.get_active_user_name()
+        return [
+            SystemUser(
+                name=user.name,
+                active=user.name == active_user_name if active_user_name else False,
+                terminal=user.terminal or "",
+                host=user.host or "",
+                started=user.started,
+                pid=float(user.pid) if user.pid else 0.0,
+            )
+            for user in users()
+        ]
 
     @property
     def _uuid(self) -> str:
