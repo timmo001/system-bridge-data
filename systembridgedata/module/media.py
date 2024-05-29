@@ -18,7 +18,7 @@ PLAYING_UPDATE_INTERVAL: Final[int] = 5
 
 
 class Media(Base):
-    """Media."""
+    """Media data."""
 
     def __init__(
         self,
