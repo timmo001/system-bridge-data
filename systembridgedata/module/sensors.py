@@ -13,19 +13,19 @@ from systembridgeshared.base import Base
 class Sensors(Base):
     """Sensors data."""
 
-    async def get_fans(self) -> dict[str, list[sfan]] | None:
+    def get_fans(self) -> dict[str, list[sfan]] | None:
         """Get fans."""
         if not hasattr(psutil, "sensors_fans"):
             return None
         return psutil.sensors_fans()  # type: ignore
 
-    async def get_temperatures(self) -> dict[str, list[shwtemp]] | None:
+    def get_temperatures(self) -> dict[str, list[shwtemp]] | None:
         """Get temperatures."""
         if not hasattr(psutil, "sensors_temperatures"):
             return None
         return psutil.sensors_temperatures(fahrenheit=False)  # type: ignore
 
-    async def get_windows_sensors(self) -> dict | None:
+    def get_windows_sensors(self) -> dict | None:
         """Get windows sensors."""
         if sys.platform != "win32":
             return None

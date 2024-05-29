@@ -66,19 +66,19 @@ class System(Base):
 
         self._version_latest: str | None = None
 
-    async def get_active_user_id(self) -> int:
+    def get_active_user_id(self) -> int:
         """Get active user ID."""
         return os.getpid()
 
-    async def get_active_user_name(self) -> str | None:
+    def get_active_user_name(self) -> str | None:
         """Get active user."""
         return getpass.getuser()
 
-    async def get_boot_time(self) -> float:
+    def get_boot_time(self) -> float:
         """Get boot time."""
         return boot_time()
 
-    async def get_camera_usage(self) -> list[str]:
+    def get_camera_usage(self) -> list[str]:
         """Return a list of apps that are currently using the webcam."""
         active_apps: list[str] = []
         if sys.platform == "win32":
@@ -130,15 +130,15 @@ class System(Base):
             pass
         return active_apps
 
-    async def get_fqdn(self) -> str:
+    def get_fqdn(self) -> str:
         """Get FQDN."""
         return socket.getfqdn()
 
-    async def get_hostname(self) -> str:
+    def get_hostname(self) -> str:
         """Get hostname."""
         return socket.gethostname()
 
-    async def get_ip_address_4(self) -> str:
+    def get_ip_address_4(self) -> str:
         """Get IPv4 address."""
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -147,7 +147,7 @@ class System(Base):
         except OSError:
             return ""
 
-    async def get_ip_address_6(self) -> str:
+    def get_ip_address_6(self) -> str:
         """Get IPv6 address."""
         try:
             sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
@@ -160,7 +160,7 @@ class System(Base):
         """Get MAC address."""
         return ":".join(re.findall("..", f"{uuid.getnode():012x}"))
 
-    async def get_pending_reboot(self) -> bool:
+    def get_pending_reboot(self) -> bool:
         """Check if there is a pending reboot."""
         if sys.platform == "win32":
             # Read from registry for pending reboot
@@ -225,19 +225,19 @@ class System(Base):
                 return True
         return False
 
-    async def get_platform(self) -> str:
+    def get_platform(self) -> str:
         """Get platform."""
         return platform.system()
 
-    async def get_platform_version(self) -> str:
+    def get_platform_version(self) -> str:
         """Get platform version."""
         return platform.version()
 
-    async def get_uptime(self) -> float:
+    def get_uptime(self) -> float:
         """Get uptime."""
         return os.times().system
 
-    async def get_users(self) -> list[suser]:  # pylint: disable=unsubscriptable-object
+    def get_users(self) -> list[suser]:  # pylint: disable=unsubscriptable-object
         """Get users."""
         return users()
 
@@ -297,7 +297,7 @@ class System(Base):
 
         return self._version_latest
 
-    async def get_version_newer_available(self) -> bool | None:
+    def get_version_newer_available(self) -> bool | None:
         """Check if newer version is available."""
         if self._version_latest is not None and self._version is not None:
             return parse(self._version_latest) > parse(self._version)

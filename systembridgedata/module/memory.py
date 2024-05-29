@@ -11,10 +11,10 @@ from systembridgeshared.base import Base
 class Memory(Base):
     """Memory data."""
 
-    async def get_swap(self) -> sswap:
+    def get_swap(self) -> sswap:
         """Swap memory."""
         return swap_memory()
 
-    async def get_virtual(self) -> NamedTuple:
+    def get_virtual(self) -> NamedTuple:
         """Virtual memory."""
         return virtual_memory()

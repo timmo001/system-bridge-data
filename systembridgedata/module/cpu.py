@@ -26,22 +26,22 @@ class CPU(Base):
 
         self.sensors: Sensors | None = None
 
-    async def get_frequency(self) -> scpufreq:
+    def get_frequency(self) -> scpufreq:
         """CPU frequency."""
         return cpu_freq()
 
-    async def get_frequency_per_cpu(
+    def get_frequency_per_cpu(
         self,
     ) -> list[scpufreq]:
         """CPU frequency per CPU."""
         return cpu_freq(percpu=True)  # type: ignore
 
-    async def get_load_average(self) -> float:
+    def get_load_average(self) -> float:
         """Get load average."""
         avg_tuple = getloadavg()
         return sum([avg_tuple[0], avg_tuple[1], avg_tuple[2]]) / 3
 
-    async def get_power_package(self) -> float | None:
+    def get_power_package(self) -> float | None:
         """CPU package power."""
         if (
             self.sensors is None
@@ -70,7 +70,7 @@ class CPU(Base):
                     )
         return None
 
-    async def get_power_per_cpu(self) -> list[float] | None:
+    def get_power_per_cpu(self) -> list[float] | None:
         """CPU package power."""
         powers: list[float] = [-1] * self._count
         if (
@@ -114,11 +114,11 @@ class CPU(Base):
 
         return powers
 
-    async def get_stats(self) -> scpustats:
+    def get_stats(self) -> scpustats:
         """CPU stats."""
         return cpu_stats()
 
-    async def get_temperature(self) -> float | None:
+    def get_temperature(self) -> float | None:
         """CPU temperature."""
         if self.sensors is not None:
             if self.sensors.temperatures is not None:
@@ -189,37 +189,37 @@ class CPU(Base):
                             )
         return None
 
-    async def get_times(self) -> pcputimes:
+    def get_times(self) -> pcputimes:
         """CPU times."""
         return cpu_times(percpu=False)
 
-    async def get_times_percent(self) -> pcputimes:
+    def get_times_percent(self) -> pcputimes:
         """CPU times percent."""
         return cpu_times_percent(interval=1, percpu=False)
 
-    async def get_times_per_cpu(
+    def get_times_per_cpu(
         self,
     ) -> list[pcputimes]:
         """CPU times per CPU."""
         return cpu_times(percpu=True)
 
-    async def get_times_per_cpu_percent(
+    def get_times_per_cpu_percent(
         self,
     ) -> list[pcputimes]:
         """CPU times per CPU percent."""
         return cpu_times_percent(interval=1, percpu=True)
 
-    async def get_usage(self) -> float:
+    def get_usage(self) -> float:
         """CPU usage."""
         return cpu_percent(interval=1, percpu=False)
 
-    async def get_usage_per_cpu(
+    def get_usage_per_cpu(
         self,
     ) -> list[float]:
         """CPU usage per CPU."""
         return cpu_percent(interval=1, percpu=True)  # type: ignore
 
-    async def get_voltages(self) -> tuple[float | None, list[float]]:
+    def get_voltages(self) -> tuple[float | None, list[float]]:
         """CPU voltage."""
         voltage: float | None = None
         voltages: list[float] = [-1] * self._count
