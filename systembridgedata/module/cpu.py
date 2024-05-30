@@ -11,6 +11,7 @@ from psutil import (
 )
 from psutil._common import pcputimes, scpufreq, scpustats, shwtemp
 from systembridgemodels.modules.sensors import Sensors
+from systembridgemodels.modules.cpu import CPUStats
 
 from systembridgeshared.base import Base
 
@@ -114,9 +115,15 @@ class CPU(Base):
 
         return powers
 
-    def get_stats(self) -> scpustats:
+    def get_stats(self) -> CPUStats:
         """CPU stats."""
-        return cpu_stats()
+        data = cpu_stats()
+        return CPUStats(
+            ctx_switches=data.ctx_switches,
+            interrupts=data.interrupts,
+            soft_interrupts=data.soft_interrupts,
+            syscalls=data.syscalls,
+        )
 
     def get_temperature(self) -> float | None:
         """CPU temperature."""
