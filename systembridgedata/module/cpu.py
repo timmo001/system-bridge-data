@@ -9,9 +9,9 @@ from psutil import (
     cpu_times_percent,
     getloadavg,
 )
-from psutil._common import pcputimes, scpufreq, scpustats, shwtemp
+from psutil._common import shwtemp
+from systembridgemodels.modules.cpu import CPUFrequency, CPUStats, CPUTimes
 from systembridgemodels.modules.sensors import Sensors
-from systembridgemodels.modules.cpu import CPUStats
 
 from systembridgeshared.base import Base
 
@@ -27,15 +27,29 @@ class CPU(Base):
 
         self.sensors: Sensors | None = None
 
-    def get_frequency(self) -> scpufreq:
+    def get_frequency(self) -> CPUFrequency:
         """CPU frequency."""
-        return cpu_freq()
+        data = cpu_freq()
+        return CPUFrequency(
+            current=data.current,
+            min=data.min,
+            max=data.max,
+        )
 
     def get_frequency_per_cpu(
         self,
-    ) -> list[scpufreq]:
+    ) -> list[CPUFrequency]:
         """CPU frequency per CPU."""
-        return cpu_freq(percpu=True)  # type: ignore
+        data = cpu_freq(percpu=True)
+
+        return [
+            CPUFrequency(
+                current=item.current,  # type: ignore
+                min=item.min,  # type: ignore
+                max=item.max,  # type: ignore
+            )
+            for item in data
+        ]
 
     def get_load_average(self) -> float:
         """Get load average."""
@@ -129,7 +143,8 @@ class CPU(Base):
         """CPU temperature."""
         if self.sensors is not None:
             if self.sensors.temperatures is not None:
-                temperatures: dict[str, list[shwtemp]] = self.sensors.temperatures
+                temperatures: dict[str, list[shwtemp]
+                                   ] = self.sensors.temperatures
                 if "k10temp" in temperatures:
                     for sensor in self.sensors.temperatures["k10temp"]:
                         self._logger.debug("k10temp: %s", sensor)
@@ -196,25 +211,65 @@ class CPU(Base):
                             )
         return None
 
-    def get_times(self) -> pcputimes:
+    def get_times(self) -> CPUTimes:
         """CPU times."""
-        return cpu_times(percpu=False)
+        data = cpu_times(percpu=False)
+        return CPUTimes(
+            user=data.user,
+            system=data.system,
+            idle=data.idle,
+            interrupt=data.interrupt if hasattr(data, "interrupt") else None,
+            dpc=data.dpc if hasattr(data, "dpc") else None,
+        )
 
-    def get_times_percent(self) -> pcputimes:
+    def get_times_percent(self) -> CPUTimes:
         """CPU times percent."""
-        return cpu_times_percent(interval=1, percpu=False)
+        data = cpu_times_percent(interval=1, percpu=False)
+        return CPUTimes(
+            user=data.user,
+            system=data.system,
+            idle=data.idle,
+            interrupt=data.interrupt
+            if hasattr(data, "interrupt")
+            else None,
+            dpc=data.dpc if hasattr(data, "dpc") else None,
+        )
 
     def get_times_per_cpu(
         self,
-    ) -> list[pcputimes]:
+    ) -> list[CPUTimes]:
         """CPU times per CPU."""
-        return cpu_times(percpu=True)
+        data = cpu_times(percpu=True)
+
+        return [
+            CPUTimes(
+                user=item.user,
+                system=item.system,
+                idle=item.idle,
+                interrupt=item.interrupt if hasattr(
+                    item, "interrupt") else None,
+                dpc=item.dpc if hasattr(item, "dpc") else None,
+            )
+            for item in data
+        ]
 
     def get_times_per_cpu_percent(
         self,
-    ) -> list[pcputimes]:
+    ) -> list[CPUTimes]:
         """CPU times per CPU percent."""
-        return cpu_times_percent(interval=1, percpu=True)
+        data = cpu_times_percent(interval=1, percpu=True)
+
+        return [
+            CPUTimes(
+                user=item.user,
+                system=item.system,
+                idle=item.idle,
+                interrupt=item.interrupt if hasattr(
+                    item, "interrupt") else None,
+                dpc=item.dpc if hasattr(item, "dpc") else None,
+            )
+            for item in data
+        ]
 
     def get_usage(self) -> float:
         """CPU usage."""
