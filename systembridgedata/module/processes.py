@@ -1,7 +1,4 @@
 """Processes."""
-
-from typing import override
-
 from psutil import AccessDenied, NoSuchProcess, process_iter
 from systembridgemodels.modules.processes import Process
 
@@ -11,11 +8,8 @@ from systembridgeshared.base import Base
 class Processes(Base):
     """Processes data."""
 
-    @override
-    async def update_all_data(self) -> list[Process]:
+    async def get_processes(self) -> list[Process]:
         """Update all data."""
-        self._logger.debug("Update all data")
-
         process_list = list(process_iter())
 
         # Get names of processes
