@@ -8,7 +8,7 @@ from systembridgeshared.base import Base
 class Processes(Base):
     """Processes data."""
 
-    async def get_processes(self) -> list[Process]:
+    def get_processes(self) -> list[Process]:
         """Update all data."""
         process_list = list(process_iter())
 
