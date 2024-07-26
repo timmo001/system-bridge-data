@@ -1,4 +1,4 @@
-incremental==22.10.0
+incremental==24.7.0
 packaging>=24.0
 plyer==2.1.0
 psutil==6.0.0
