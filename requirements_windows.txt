@@ -1,2 +1,2 @@
-pywin32==306
+pywin32==307
 winsdk==1.0.0b10
