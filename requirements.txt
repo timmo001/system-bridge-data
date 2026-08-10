@@ -1,5 +1,5 @@
 incremental==22.10.0
-packaging>=24.0
+packaging>=26.3
 plyer==2.1.0
 psutil==6.0.0
 systembridgeshared==4.0.4
